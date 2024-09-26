@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir Puesto - Quadra</title>
+
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAof3s49zp38TMx3wJzDSYzOtDXfWAHWCg&callback=initMap" async defer></script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            color: #333;
+        }
+
+        label {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="file"], textarea {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+    <script>
+        let map, marker;
+
+        function initMap() {
+            const initialLocation = { lat: 19.4326, lng: -99.1332 }; // Ciudad de México como ubicación inicial
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: initialLocation,
+                zoom: 14
+            });
+
+            // Coloca un marcador en la ubicación inicial
+            marker = new google.maps.Marker({
+                position: initialLocation,
+                map: map,
+                draggable: true
+            });
+
+            // Actualiza latitud y longitud cuando el marcador se mueve
+            google.maps.event.addListener(marker, 'dragend', function (event) {
+                document.getElementById('latitud').value = event.latLng.lat();
+                document.getElementById('longitud').value = event.latLng.lng();
+            });
+
+            // Clic en el mapa para mover el marcador
+            map.addListener('click', function(event) {
+                marker.setPosition(event.latLng);
+                document.getElementById('latitud').value = event.latLng.lat();
+                document.getElementById('longitud').value = event.latLng.lng();
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Agregar un Nuevo Sitio de Comida</h1>
+        <form action="{{ url_for('subir_puesto') }}" method="POST" enctype="multipart/form-data">
+            <label for="nombre">Nombre del sitio:</label>
+            <input type="text" name="nombre" id="nombre" required>
+
+            <label for="descripcion">Descripción:</label>
+            <textarea name="descripcion" id="descripcion" rows="4" required></textarea>
+
+            <label for="horarios">Horarios:</label>
+            <input type="text" name="horarios" id="horarios" required>
+
+            <label for="especialidad">Especialidad de la casa:</label>
+            <input type="text" name="especialidad" id="especialidad">
+
+            <label for="foto">Foto del sitio:</label>
+            <input type="file" name="foto" id="foto" accept="image/*">
+
+            <!-- Mapa para seleccionar la ubicación -->
+            <div id="map"></div>
+
+            <label for="latitud">Latitud:</label>
+            <input type="text" name="latitud" id="latitud" readonly>
+
+            <label for="longitud">Longitud:</label>
+            <input type="text" name="longitud" id="longitud" readonly>
+
+            <button type="submit">Agregar</button>
+        </form>
+
+        <a href="{{ url_for('home') }}">Regresar a la página principal</a>
+    </div>
+</body>
+</html>
+

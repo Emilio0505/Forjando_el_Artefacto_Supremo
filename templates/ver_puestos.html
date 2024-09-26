@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puestos - Cuadrícula</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        ul li {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            display: flex; /* Para alinear imagen y texto */
+            align-items: center; /* Centrar verticalmente */
+        }
+        img {
+            max-width: 100px; /* Ancho máximo de la imagen */
+            margin-right: 10px; /* Espacio entre imagen y texto */
+            border-radius: 5px; /* Bordes redondeados */
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lista de Puestos</h1>
+        <ul>
+            {% for puesto in puestos %}
+                <li>
+                    {% if puesto.foto %}
+                        <img src="{{ url_for('static', filename='uploads/' + puesto.foto) }}" alt="{{ puesto.nombre }}">
+                    {% endif %}
+                    <div>
+                        <a href="{{ url_for('ver_puesto', id_puesto=puesto.id_puesto) }}">{{ puesto.nombre }}</a>
+                        <p>{{ puesto.descripcion }}</p>
+                    </div>
+                </li>
+            {% else %}
+                <li>No hay puestos disponibles.</li>
+            {% endfor %}
+        </ul>
+        <a href="{{ url_for('home') }}">Regresar a la página principal</a>
+    </div>
+</body>
+</html>
